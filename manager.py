@@ -43,7 +43,7 @@ manager = ("db", MigrateCommand)
 @app.route("/")
 def index():
     session["name"] = "itheima"
-    return "index11241"
+    return "index1124111"
 
 if __name__ == "__main__":
     manager.run()
