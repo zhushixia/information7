@@ -5,6 +5,7 @@ from flask.ext.wtf import CSRFProtect
 from redis import StrictRedis
 from flask_session import Session#可以指定session保存到位置
 from flask_script import Manager
+from flask_migrate import Migrate,MigrateCommand
 
 class Config(object):#项目的配置
     DEBUG = True
@@ -25,7 +26,6 @@ class Config(object):#项目的配置
 app = Flask(__name__)
 #加载配置
 app.config.from_object(Config)
-
 #初始化数据库
 db = SQLAlchemy(app)
 #初始化redis存储对象
@@ -33,9 +33,11 @@ redis_store = StrictRedis(host=Config.REDIS_HOST, port=Config.REDIS_PORT)
 #开启当前项目csrf保护,只做服务验证工作
 CSRFProtect(app)
 Session(app)
-
 manager = Manager(app)
-
+#将app与db关联
+Migrate(app, db)
+#将迁移命令添加到manager中
+manager = ("db", MigrateCommand)
 
 
 @app.route("/")
